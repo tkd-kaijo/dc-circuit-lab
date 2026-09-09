@@ -1,9 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="96" fill="#17303b"/>
-  <path d="M94 140h122m80 0h122v232H94V140" fill="none" stroke="#fffefa" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
-  <rect x="216" y="116" width="80" height="48" fill="none" stroke="#ad5a2a" stroke-width="18"/>
-  <path d="M178 372c12-54 52-54 64 0 12-54 52-54 64 0 12-54 52-54 64 0" fill="none" stroke="#7c4cac" stroke-width="18" stroke-linecap="round"/>
-  <line x1="390" y1="242" x2="390" y2="302" stroke="#087f83" stroke-width="20"/><line x1="426" y1="242" x2="426" y2="302" stroke="#087f83" stroke-width="20"/>
-  <circle cx="132" cy="140" r="15" fill="#d94b3d"/><circle cx="94" cy="230" r="15" fill="#d94b3d"/><circle cx="94" cy="330" r="15" fill="#d94b3d"/>
-  <polygon points="132,256 210,222 210,290" fill="#4ba6da" opacity=".85"/>
+  <rect width="512" height="512" fill="#17303b"/>
+  <circle cx="256" cy="256" r="206" fill="#214451"/>
+  <path d="M112 144H154 M236 144H254 M354 144H400V368H112V144" fill="none" stroke="#fffefa" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="160" cy="144" r="10" fill="#fffefa"/>
+  <circle cx="230" cy="144" r="10" fill="#fffefa"/>
+  <path d="M160 144L218 94" fill="none" stroke="#f5c84c" stroke-width="20" stroke-linecap="round"/>
+  <rect x="254" y="121" width="100" height="46" rx="5" fill="#214451" stroke="#ad5a2a" stroke-width="15"/>
+  <line x1="400" y1="218" x2="400" y2="250" stroke="#fffefa" stroke-width="20"/>
+  <line x1="354" y1="250" x2="446" y2="250" stroke="#087f83" stroke-width="18" stroke-linecap="round"/>
+  <line x1="368" y1="282" x2="432" y2="282" stroke="#087f83" stroke-width="18" stroke-linecap="round"/>
+  <line x1="400" y1="282" x2="400" y2="368" stroke="#fffefa" stroke-width="20"/>
+  <path d="M184 368c10-50 46-50 56 0 10-50 46-50 56 0 10-50 46-50 56 0" fill="none" stroke="#a477cf" stroke-width="18" stroke-linecap="round"/>
+  <line x1="88" y1="228" x2="136" y2="228" stroke="#fffefa" stroke-width="18" stroke-linecap="round"/>
+  <line x1="98" y1="266" x2="126" y2="266" stroke="#fffefa" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="112" cy="176" r="14" fill="#d94b3d" stroke="#fffefa" stroke-width="4"/>
+  <circle cx="112" cy="316" r="14" fill="#d94b3d" stroke="#fffefa" stroke-width="4"/>
+  <circle cx="258" cy="368" r="14" fill="#d94b3d" stroke="#fffefa" stroke-width="4"/>
+  <polygon points="166,256 266,216 266,296" fill="#4ba6da" stroke="#a9dcf4" stroke-width="7" stroke-linejoin="round"/>
 </svg>
