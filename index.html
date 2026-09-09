@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>直流回路ラボ｜R・L・Cの過渡現象</title>
+  <meta name="description" content="抵抗を含むRC・RL・RLC直流回路で、スイッチ操作後の電流と電圧の時間変化を観察する教材用シミュレーター。">
+  <meta name="theme-color" content="#17303b">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="control-deck" aria-label="回路と物理量の設定">
+      <label class="select-control wide">
+        <span>回路</span>
+        <select id="circuit-select">
+          <optgroup label="コンデンサーを含む回路">
+            <option value="RC-charge" selected>RC直列｜充電</option>
+            <option value="RC-discharge">RC直列｜放電</option>
+          </optgroup>
+          <optgroup label="コイルを含む回路">
+            <option value="RL-rise">RL直列｜電流の立ち上がり</option>
+            <option value="RL-decay">RL直列｜電流の減衰</option>
+          </optgroup>
+          <optgroup label="コイルとコンデンサーを含む回路">
+            <option value="RLC-step">RLC直列｜電源を入れる</option>
+            <option value="RLC-free">RLC直列｜充電後に電源を外す</option>
+          </optgroup>
+        </select>
+      </label>
+      <label class="range-control">
+        <span><b id="source-label">直流電源 E</b><output id="source-out">10 V</output></span>
+        <input id="source-range" type="range" min="1" max="20" step="1" value="10">
+      </label>
+      <label class="range-control">
+        <span><b>抵抗 R</b><output id="resistance-out">20 Ω</output></span>
+        <input id="resistance-range" type="range" min="1" max="100" step="1" value="20">
+      </label>
+      <label class="range-control" id="inductance-control">
+        <span><b>自己インダクタンス L</b><output id="inductance-out">100 mH</output></span>
+        <input id="inductance-range" type="range" min="10" max="500" step="1" value="100">
+      </label>
+      <label class="range-control" id="capacitance-control">
+        <span><b>電気容量 C</b><output id="capacitance-out">100 μF</output></span>
+        <input id="capacitance-range" type="range" min="1" max="500" step="1" value="100">
+      </label>
+    </section>
+
+    <section class="playback-bar" aria-label="再生操作">
+      <button id="switch-button" type="button">↺ 初めに戻す</button>
+      <button id="play-button" type="button" class="primary">▶ 再生</button>
+      <label class="time-control">
+        <span>経過時間</span>
+        <input id="time-range" type="range" min="0" max="1000" step="1" value="0">
+        <output id="time-out">0 s</output>
+      </label>
+      <label class="speed-control">
+        <span>再生速度</span>
+        <select id="speed-select">
+          <option value="0.1">0.1×</option>
+          <option value="0.25">0.25×</option>
+          <option value="0.5">0.5×</option>
+          <option value="1" selected>1×</option>
+          <option value="2">2×</option>
+          <option value="5">5×</option>
+          <option value="10">10×</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="workspace">
+      <div class="diagram-panel">
+        <div class="panel-heading">
+          <div>
+            <p id="mode-kicker">SWITCH ON</p>
+            <h2 id="circuit-title">RC直列回路の充電</h2>
+          </div>
+          <p id="circuit-note">スイッチを入れた直後に最大だった電流が、充電とともに減少します。</p>
+        </div>
+        <svg id="circuit-svg" viewBox="0 0 900 500" role="img" aria-labelledby="circuit-svg-title circuit-svg-desc">
+          <title id="circuit-svg-title">直流回路の瞬時値</title>
+          <desc id="circuit-svg-desc">電流を赤い粒の動く速さ、各素子の電圧を青い二等辺三角形の大きさと向きで示します。</desc>
+          <defs>
+            <filter id="soft-shadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.16"></feDropShadow>
+            </filter>
+          </defs>
+          <g id="circuit-layer"></g>
+          <g id="dynamic-layer"></g>
+        </svg>
+        <div class="instant-strip" id="instant-strip" aria-live="polite"></div>
+      </div>
+
+      <section class="analysis-panel" aria-labelledby="analysis-heading">
+        <div class="panel-heading analysis-heading">
+          <div>
+            <p>TRANSIENT WAVEFORMS</p>
+            <h2 id="analysis-heading">スイッチ操作後の時間変化</h2>
+          </div>
+          <div id="wave-legend" class="wave-legend"></div>
+        </div>
+        <svg id="analysis-svg" viewBox="0 0 1000 500" role="img" aria-labelledby="analysis-title analysis-desc">
+          <title id="analysis-title">電圧と電流の過渡波形</title>
+          <desc id="analysis-desc">上段に電源と各素子の電圧、下段に回路電流を表示し、縦のカーソルで同時刻の値を示します。</desc>
+          <g id="wave-grid"></g>
+          <g id="wave-lines"></g>
+          <g id="wave-cursor"></g>
+        </svg>
+      </section>
+    </section>
+
+    <aside class="data-panel" aria-label="現在の状態と関係式">
+      <div class="data-heading">
+        <p>NOW</p>
+        <h2>現在の状態</h2>
+      </div>
+      <dl id="state-values"></dl>
+      <div class="formula-box">
+        <span>関係式</span>
+        <strong id="formula-main">i = (E/R)e<sup>−t/RC</sup></strong>
+        <small id="formula-sub">キルヒホッフの第2法則：E = vR + vC</small>
+      </div>
+    </aside>
+
+    <footer>
+      <p>赤い粒は慣用電流。青い三角形は30°の頂点側が低電位です。</p>
+      <p>理想直流電源・理想コイル・理想コンデンサーとして計算し、回路には必ず抵抗 R を含めています。</p>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
