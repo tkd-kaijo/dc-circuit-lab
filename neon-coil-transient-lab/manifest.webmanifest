@@ -1,0 +1,14 @@
+{
+  "name": "コイルとネオンランプ｜過渡現象ラボ",
+  "short_name": "ネオン過渡現象",
+  "description": "コイルの自己誘導でネオンランプが一瞬点灯する過渡現象を観察する教材アプリ",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f0e5",
+  "theme_color": "#183642",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
