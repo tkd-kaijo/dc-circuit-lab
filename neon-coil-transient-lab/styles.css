@@ -1,0 +1,140 @@
+:root {
+  color-scheme: light;
+  --ink: #183642;
+  --muted: #5e727a;
+  --paper: #f4f0e5;
+  --panel: #fffdf7;
+  --line: #cfd5d0;
+  --wire: #233d47;
+  --current: #dd403a;
+  --voltage: #147ab1;
+  --voltage-fill: rgba(20, 122, 177, .22);
+  --amber: #f2a51f;
+  --amber-soft: rgba(242, 165, 31, .2);
+  --green: #27795f;
+  --shadow: 0 16px 42px rgba(31, 48, 52, .11);
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--ink); background: radial-gradient(circle at 12% 0%, #fff8e8 0 20%, transparent 42%), var(--paper); }
+button, select { font: inherit; }
+button { min-height: 44px; border: 1px solid #aebcb9; border-radius: 10px; padding: 0 16px; color: var(--ink); background: #fffefa; font-weight: 700; cursor: pointer; }
+button:hover:not(:disabled) { border-color: var(--ink); transform: translateY(-1px); }
+button:disabled { opacity: .45; cursor: default; }
+button.primary { color: #fff; border-color: var(--ink); background: var(--ink); }
+select { min-height: 42px; border: 1px solid #aebcb9; border-radius: 8px; color: var(--ink); background: #fffefa; padding: 0 28px 0 10px; }
+
+.app-shell { width: min(1440px, 100%); margin: 0 auto; padding: 20px; }
+.control-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.speed-control { display: flex; align-items: center; gap: 8px; margin-left: auto; color: var(--muted); font-weight: 700; }
+.status-band { display: grid; grid-template-columns: minmax(330px, .9fr) minmax(380px, 1.1fr); align-items: center; gap: 20px; padding: 16px 20px; color: #fff; border-radius: 14px; background: var(--ink); box-shadow: var(--shadow); }
+.status-band > div { display: flex; gap: 14px; align-items: center; }
+.stage-number { display: grid; place-items: center; width: 52px; height: 52px; flex: 0 0 auto; border: 1px solid rgba(255,255,255,.35); border-radius: 50%; font: 800 24px/1 ui-monospace, SFMono-Regular, Menlo, monospace; }
+.status-band p, .status-band h1 { margin: 0; }
+.status-band h1 { font-size: clamp(20px, 2.3vw, 30px); line-height: 1.25; }
+.status-band #stage-kicker { margin-bottom: 2px; color: #a9d8df; font-size: 12px; font-weight: 800; letter-spacing: .16em; }
+.status-band #stage-note { font-size: 15px; line-height: 1.7; color: #e3eeee; }
+
+.workspace { display: grid; grid-template-columns: minmax(0, 1fr) 310px; gap: 16px; margin-top: 16px; }
+.diagram-panel, .meter-panel, .graphs article { border: 1px solid rgba(35,61,71,.13); border-radius: 16px; background: var(--panel); box-shadow: var(--shadow); }
+.diagram-panel { min-width: 0; overflow: hidden; }
+.panel-heading, .meter-heading, .graph-heading { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 18px 20px 0; }
+.panel-heading p, .meter-heading p, .graph-heading p { margin: 0 0 3px; color: var(--green); font-size: 11px; font-weight: 800; letter-spacing: .16em; }
+.panel-heading h2, .meter-heading h2, .graph-heading h2 { margin: 0; font-size: 19px; }
+.legend { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; color: var(--muted); font-size: 12px; font-weight: 700; }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.particle-key { width: 35px; height: 8px; background: radial-gradient(circle, var(--current) 0 4px, transparent 4.5px) 0 0/16px 8px repeat-x; }
+.triangle-key { width: 28px; height: 17px; background: var(--voltage-fill); clip-path: polygon(100% 50%,0 0,0 100%); outline: 1px solid var(--voltage); }
+#circuit-svg { display: block; width: 100%; height: auto; min-height: 400px; }
+.polarity-note { padding: 0 20px 16px; color: var(--muted); font-size: 12px; text-align: right; }
+.polarity-note span { color: var(--voltage); font-weight: 800; }
+
+.wire { fill: none; stroke: var(--wire); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+.wire-muted { opacity: .35; }
+.terminal { fill: var(--wire); }
+.battery-plate { stroke: var(--wire); stroke-width: 6; stroke-linecap: round; }
+.component { fill: #fffefa; stroke: var(--wire); stroke-width: 4; }
+.coil { fill: none; stroke: #68418e; stroke-width: 6; stroke-linecap: round; }
+.switch-blade { stroke: var(--wire); stroke-width: 7; stroke-linecap: round; transform-origin: 220px 92px; transition: transform .22s ease; }
+.switch-blade.open { transform: rotate(-27deg); }
+.component-label { fill: var(--ink); font-weight: 800; font-size: 17px; text-anchor: middle; }
+.component-value { fill: var(--muted); font-weight: 700; font-size: 13px; text-anchor: middle; }
+.node-label { fill: var(--ink); font-size: 16px; font-weight: 900; text-anchor: middle; }
+.polarity { fill: var(--voltage); font-size: 17px; font-weight: 900; text-anchor: middle; }
+.current-particle { fill: var(--current); stroke: #fffefa; stroke-width: 2.5; filter: url(#dot-shadow); }
+.current-arrow-label { fill: var(--current); font: 800 15px/1 ui-monospace, SFMono-Regular, Menlo, monospace; paint-order: stroke; stroke: #fffefa; stroke-width: 4; }
+.voltage-triangle { fill: var(--voltage-fill); stroke: var(--voltage); stroke-width: 2.5; }
+.voltage-label { fill: var(--voltage); font: 800 14px/1 ui-monospace, SFMono-Regular, Menlo, monospace; text-anchor: middle; paint-order: stroke; stroke: #fffefa; stroke-width: 5; stroke-linejoin: round; }
+.lamp-glow { fill: var(--amber); opacity: 0; filter: url(#lamp-glow); }
+.lamp-symbol { fill: #fffefa; stroke: var(--wire); stroke-width: 4; }
+.lamp-electrode { fill: none; stroke: var(--wire); stroke-width: 3; stroke-linecap: round; }
+.lamp-lit .lamp-symbol { fill: #ffe6a0; stroke: #c67900; }
+.lamp-lit .lamp-electrode { stroke: #ffefaa; stroke-width: 5; filter: url(#lamp-glow); }
+
+.meter-panel { padding: 18px; }
+.meter-heading { padding: 0 0 10px; }
+.meter-panel dl { margin: 8px 0 14px; }
+.meter-panel dl div { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 11px 0; border-bottom: 1px solid #e2e5df; }
+.meter-panel dt { color: var(--muted); font-size: 13px; }
+.meter-panel dd { margin: 0; font: 800 17px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; text-align: right; }
+#current-value { color: var(--current); }
+#voltage-value, #emf-value { color: var(--voltage); }
+.lamp-meter { display: grid; grid-template-columns: 42px 1fr auto; align-items: center; gap: 10px; padding: 12px; border-radius: 12px; background: #eeeee8; transition: background .15s ease, box-shadow .15s ease; }
+.lamp-meter.lit { background: #fff0bd; box-shadow: 0 0 28px rgba(242,165,31,.35); }
+.lamp-mini { width: 34px; height: 34px; border: 3px solid var(--wire); border-radius: 50% 50% 42% 42%; background: #fffefa; }
+.lamp-meter.lit .lamp-mini { border-color: #c67900; background: var(--amber); box-shadow: 0 0 16px rgba(242,165,31,.85); }
+.lamp-meter small, .lamp-meter strong { display: block; }
+.lamp-meter small { color: var(--muted); font-size: 11px; }
+.lamp-meter strong { font-size: 18px; }
+.lamp-meter output { font-size: 12px; font-weight: 800; }
+.equation-box { margin-top: 14px; padding: 14px; border-left: 4px solid var(--green); background: #eef5ef; }
+.equation-box span, .equation-box small { display: block; }
+.equation-box span { color: var(--green); font-size: 11px; font-weight: 800; letter-spacing: .08em; }
+.equation-box strong { display: block; margin: 8px 0 6px; font: 800 15px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+.equation-box small { color: var(--muted); line-height: 1.55; }
+
+.graphs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+.graphs article { min-width: 0; overflow: hidden; }
+.graph-heading > span { color: var(--muted); font-size: 12px; font-weight: 700; }
+.graphs svg { display: block; width: 100%; height: auto; }
+.graph-grid { stroke: #d9ddd8; stroke-width: 1; }
+.graph-axis { stroke: var(--wire); stroke-width: 1.8; }
+.graph-text { fill: var(--muted); font-size: 11px; font-weight: 700; }
+.graph-label { font-size: 12px; font-weight: 900; }
+.current-line { fill: none; stroke: var(--current); stroke-width: 4; }
+.voltage-line { fill: none; stroke: var(--voltage); stroke-width: 4; }
+.threshold-line { fill: none; stroke: #d18b13; stroke-width: 2; stroke-dasharray: 7 6; }
+.cursor-line { stroke: var(--ink); stroke-width: 2; stroke-dasharray: 5 5; }
+.cursor-dot-current { fill: var(--current); stroke: #fff; stroke-width: 2; }
+.cursor-dot-voltage { fill: var(--voltage); stroke: #fff; stroke-width: 2; }
+
+footer { display: flex; justify-content: space-between; gap: 24px; padding: 16px 4px 2px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+footer p { margin: 0; }
+
+@media (max-width: 980px) {
+  .workspace { grid-template-columns: 1fr; }
+  .meter-panel dl { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
+  .status-band { grid-template-columns: 1fr; gap: 8px; }
+  .speed-control { margin-left: 0; }
+}
+@media (max-width: 720px) {
+  .app-shell { padding: 10px; }
+  .control-bar button { flex: 1 1 calc(50% - 8px); padding-inline: 10px; }
+  .speed-control { width: 100%; justify-content: flex-end; }
+  .panel-heading { align-items: flex-start; flex-direction: column; }
+  .legend { justify-content: flex-start; }
+  #circuit-svg { min-height: 0; }
+  .component-label { font-size: 28px; }
+  .component-value { font-size: 20px; }
+  .node-label, .polarity { font-size: 24px; }
+  .voltage-label, .current-arrow-label { font-size: 21px; }
+  .graph-text { font-size: 16px; }
+  .graph-label { font-size: 17px; }
+  .graphs { grid-template-columns: 1fr; }
+  .meter-panel dl { display: block; }
+  footer { flex-direction: column; gap: 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
