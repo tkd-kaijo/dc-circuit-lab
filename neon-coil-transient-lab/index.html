@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>コイルとネオンランプ｜過渡現象ラボ</title>
+  <meta name="description" content="電池・抵抗・コイル・ネオンランプ回路のスイッチ投入と遮断後の過渡現象を観察する教材用アニメーション。">
+  <meta name="theme-color" content="#183642">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ネオン過渡現象">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="control-bar" aria-label="再生操作">
+      <button id="sequence-button" class="primary" type="button">▶ 一連の現象を再生</button>
+      <button id="switch-button" type="button">スイッチを入れる</button>
+      <button id="pause-button" type="button" disabled>一時停止</button>
+      <button id="reset-button" type="button">↺ 最初に戻す</button>
+      <label class="speed-control">再生速度
+        <select id="speed-select">
+          <option value="0.25">0.25×</option>
+          <option value="0.5">0.5×</option>
+          <option value="1" selected>1×</option>
+          <option value="2">2×</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="status-band" aria-live="polite">
+      <div>
+        <span id="stage-number" class="stage-number">0</span>
+        <div><p id="stage-kicker">観察前</p><h1 id="stage-title">スイッチは開いています</h1></div>
+      </div>
+      <p id="stage-note">「一連の現象を再生」を押すと、投入から定常状態まで進みます。定常状態では「スイッチを切る」を押して遮断後を観察できます。</p>
+    </section>
+
+    <section class="workspace">
+      <section class="diagram-panel" aria-labelledby="diagram-heading">
+        <div class="panel-heading">
+          <div><p>CIRCUIT</p><h2 id="diagram-heading">電流と電圧の動き</h2></div>
+          <div class="legend" aria-label="表示の凡例">
+            <span><i class="particle-key" aria-hidden="true"></i>電流：粒の速さと向き</span>
+            <span><i class="triangle-key" aria-hidden="true"></i>電圧：三角形の大きさと向き</span>
+          </div>
+        </div>
+        <svg id="circuit-svg" viewBox="0 0 920 520" role="img" aria-labelledby="circuit-title circuit-desc">
+          <title id="circuit-title">電池、抵抗、コイル、ネオンランプの回路</title>
+          <desc id="circuit-desc">赤い粒の移動で電流、青い三角形の大きさと向きで電圧を示す。ネオンランプはコイルと並列に接続されている。</desc>
+          <defs>
+            <filter id="dot-shadow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity=".24"/></filter>
+            <filter id="lamp-glow" x="-120%" y="-120%" width="340%" height="340%"><feGaussianBlur stdDeviation="10" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <g id="static-layer"></g>
+          <g id="dynamic-layer"></g>
+        </svg>
+        <div class="polarity-note"><span>青い三角形の鋭い先端</span>が低電位側です。</div>
+      </section>
+
+      <aside class="meter-panel" aria-label="現在の物理量">
+        <div class="meter-heading"><p>NOW</p><h2>現在の物理量</h2></div>
+        <dl>
+          <div><dt>経過時間</dt><dd id="time-value">—</dd></div>
+          <div><dt>コイル電流 <i>i</i></dt><dd id="current-value">0.000 A</dd></div>
+          <div><dt>端子電圧 <i>V</i><sub>AB</sub></dt><dd id="voltage-value">0.0 V</dd></div>
+          <div><dt>誘導起電力の大きさ</dt><dd id="emf-value">0.0 V</dd></div>
+          <div><dt>磁場のエネルギー</dt><dd id="energy-value">0.000 J</dd></div>
+        </dl>
+        <div id="lamp-meter" class="lamp-meter">
+          <span class="lamp-mini" aria-hidden="true"></span>
+          <div><small>ネオンランプ</small><strong id="lamp-state">消灯</strong></div>
+          <output id="brightness-value">明るさ 0%</output>
+        </div>
+        <div class="equation-box">
+          <span>この段階の関係式</span>
+          <strong id="equation-main">i = 0</strong>
+          <small id="equation-note">スイッチが開いていて、電流は流れません。</small>
+        </div>
+      </aside>
+    </section>
+
+    <section class="graphs" aria-label="時間変化のグラフ">
+      <article>
+        <div class="graph-heading"><div><p>SWITCH ON</p><h2>スイッチを入れた後</h2></div><span>時間軸：0〜5τ</span></div>
+        <svg id="charge-graph" viewBox="0 0 560 230" role="img" aria-label="スイッチ投入後のコイル電流と端子電圧の時間変化">
+          <g class="grid-layer"></g><g class="plot-layer"></g><g class="cursor-layer"></g>
+        </svg>
+      </article>
+      <article>
+        <div class="graph-heading"><div><p>SWITCH OFF</p><h2>スイッチを切った後</h2></div><span id="discharge-scale">時間軸：約0〜2 ms</span></div>
+        <svg id="discharge-graph" viewBox="0 0 560 230" role="img" aria-label="スイッチ遮断後のコイル電流とネオンランプ電圧の時間変化">
+          <g class="grid-layer"></g><g class="plot-layer"></g><g class="cursor-layer"></g>
+        </svg>
+      </article>
+    </section>
+
+    <footer>
+      <p>設定：電池 9.0 V、内部抵抗 10 Ω、コイル L = 1.0 H・抵抗 35 Ω。ネオンランプは |V<sub>AB</sub>| ≳ 80 V で点灯。</p>
+      <p>遮断後だけ時間を大きく引き伸ばして表示しています。電流は慣用電流です。</p>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
